@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tab_restaurantes")
 public class Restaurante {
 
     @Id

@@ -1,8 +1,8 @@
 package com.algaworks.algafood.infrastructure.repository;
 
-import com.algaworks.algafood.domain.model.Cozinha;
+import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.model.Restaurante;
-import com.algaworks.algafood.domain.repository.CozinhaRepository;
+import com.algaworks.algafood.domain.repository.EstadoRepository;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,32 +12,32 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Component
-public class RestauranteRepositoryImp implements RestauranteRepository {
+public class EstadoRepositoryImp implements EstadoRepository {
 
     @PersistenceContext
     private EntityManager manager;
 
     @Override
-    public List<Restaurante> todos() {
-        return manager.createQuery("FROM Restaurante", Restaurante.class)
+    public List<Estado> todos() {
+        return manager.createQuery("FROM Estado", Estado.class)
                 .getResultList();
     }
 
     @Override
-    public Restaurante porId(Long id) {
-        return manager.find(Restaurante.class, id);
+    public Estado porId(Long id) {
+        return manager.find(Estado.class, id);
     }
 
     @Transactional
     @Override
-    public Restaurante adicionar(Restaurante cozinha) {
-        return manager.merge(cozinha);
+    public Estado adicionar(Estado estado) {
+        return manager.merge(estado);
     }
 
     @Transactional
     @Override
-    public void remover(Restaurante restaurante) {
-        restaurante = this.porId(restaurante.getId());
-        manager.remove(restaurante);
+    public void remover(Estado estado) {
+        estado = this.porId(estado.getId());
+        manager.remove(estado);
     }
 }

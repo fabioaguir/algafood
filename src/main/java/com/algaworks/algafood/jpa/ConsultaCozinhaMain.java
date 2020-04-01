@@ -21,6 +21,6 @@ public class ConsultaCozinhaMain {
         Cozinha cozinha = new Cozinha();
         cozinha.setId(1L);
 
-        cozinhaRepository.remover(cozinha);
+        //cozinhaRepository.remover(cozinha);
     }
 }

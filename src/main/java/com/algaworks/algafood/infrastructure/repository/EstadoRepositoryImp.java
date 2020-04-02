@@ -4,6 +4,7 @@ import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.EstadoRepository;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,26 +19,31 @@ public class EstadoRepositoryImp implements EstadoRepository {
     private EntityManager manager;
 
     @Override
-    public List<Estado> todos() {
+    public List<Estado> listar() {
         return manager.createQuery("FROM Estado", Estado.class)
                 .getResultList();
     }
 
     @Override
-    public Estado porId(Long id) {
+    public Estado buscar(Long id) {
         return manager.find(Estado.class, id);
     }
 
     @Transactional
     @Override
-    public Estado adicionar(Estado estado) {
+    public Estado salvar(Estado estado) {
         return manager.merge(estado);
     }
 
     @Transactional
     @Override
-    public void remover(Estado estado) {
-        estado = this.porId(estado.getId());
+    public void remover(Long id) {
+        Estado estado = this.buscar(id);
+
+        if(estado == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+
         manager.remove(estado);
     }
 }

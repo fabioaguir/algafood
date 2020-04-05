@@ -8,7 +8,6 @@ import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,15 +25,20 @@ public class CozinhaController {
 
     @GetMapping()
     public List<Cozinha> todas() {
-        return cozinhaRepository.listar();
+        return cozinhaRepository.findAll();
     }
+
+//    @GetMapping("/consulta/por-nome")
+//    public List<Cozinha> consultarPorNome(@RequestParam String nome) {
+//        return cozinhaRepository.consultarPorNome(nome);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Cozinha> buscar(@PathVariable() Long id) {
-        Cozinha cozinha = cozinhaRepository.buscar(id);
+        Optional<Cozinha> cozinha = cozinhaRepository.findById(id);
 
-        if(cozinha != null) {
-            return ResponseEntity.ok(cozinha);
+        if(cozinha.isPresent()) {
+            return ResponseEntity.ok(cozinha.get());
         }
 
         return ResponseEntity.notFound().build();
@@ -49,13 +53,13 @@ public class CozinhaController {
     @PutMapping("/{id}")
     public ResponseEntity<Cozinha> alterar(@PathVariable() Long id,
                                            @RequestBody Cozinha cozinha) {
-        Cozinha cozinhaAtual = cozinhaRepository.buscar(id);
+        Optional<Cozinha> cozinhaAtual = cozinhaRepository.findById(id);
 
-        if(cozinhaAtual != null) {
+        if(cozinhaAtual.isEmpty()) {
             BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-            cozinhaAtual = cadastroCozinha.salvar(cozinhaAtual);
+            Cozinha cozinhaDalva = cadastroCozinha.salvar(cozinhaAtual.get());
 
-            return ResponseEntity.ok(cozinhaAtual);
+            return ResponseEntity.ok(cozinhaDalva);
         }
 
         return ResponseEntity.notFound().build();

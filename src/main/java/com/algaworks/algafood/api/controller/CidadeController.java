@@ -29,43 +29,19 @@ public class CidadeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cidade> buscar(@PathVariable Long id) {
-        Optional<Cidade> cidade = cidadeRepository.findById(id);
-
-        if (cidade.isPresent()) {
-            return ResponseEntity.ok(cidade.get());
-        }
-
-        return ResponseEntity.notFound().build();
+    public Cidade buscar(@PathVariable Long id) {
+        return cadastroCidade.buscar(id);
     }
 
     @PostMapping
-    public ResponseEntity<?> salvar(@RequestBody Cidade cidade) {
-        try {
-            cidade = cadastroCidade.salvar(cidade);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(cidade);
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public Cidade adicionar(@RequestBody Cidade cidade) {
+        return cadastroCidade.salvar(cidade);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> alterar(@RequestBody Cidade cidade,
-                                     @PathVariable Long id) {
-        try {
-            Optional<Cidade> cidadeAtual = cidadeRepository.findById(id);
-
-            if(cidadeAtual.isEmpty()) {
-                BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-                Cidade cidadeSalva = cadastroCidade.salvar(cidadeAtual.get());
-
-                return ResponseEntity.ok(cidadeSalva);
-            }
-
-            return ResponseEntity.notFound().build();
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long id) {
+        cadastroCidade.excluir(id);
     }
 }

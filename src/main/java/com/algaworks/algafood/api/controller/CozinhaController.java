@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.*;
 
 @RestController
@@ -38,7 +39,7 @@ public class CozinhaController {
 
     @PutMapping("/{id}")
     public Cozinha alterar(@PathVariable() Long id,
-                                           @RequestBody Cozinha cozinha) {
+                                           @RequestBody @Valid Cozinha cozinha) {
         Cozinha cozinhaAtual = cadastroCozinha.buscar(id);
 
         BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
